@@ -42,7 +42,9 @@ const login = async (req, res) => {
     if (!userExist) {
       return res.status(400).json({ message: "invalid credentials" });
     }
-    const user = await bcrypt.compare(password, userExist.password);
+    // const user = await bcrypt.compare(password, userExist.password);
+    const user = await userExist.comparePassword(password);
+
     if (user) {
       res.status(200).send({
         message: "login  successful",
@@ -53,7 +55,8 @@ const login = async (req, res) => {
       res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
-    res.status(500).json({ error: "internal server error" });
+    // res.status(500).json({ error: "internal server error" });
+    next(error);
   }
 };
 
